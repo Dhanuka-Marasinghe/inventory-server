@@ -1,0 +1,172 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package cw2.dhanuka.ds.communication.grpc.generated;
+
+enum RoleType {
+    ADMIN = 0;
+    INVENTORY_SYSTEM_CLERK = 1;
+    BUYER = 2;
+    SELLER = 3;
+}
+
+enum Type {
+    SELL = 0;
+    RENT = 1;
+    NEW_ARRIVAL = 2;
+}
+
+message UserRequest {
+    string userName = 1;
+}
+
+message User {
+    string userName = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string address = 5;
+    RoleType role = 6;
+}
+
+message UserAddRequest {
+    string userName = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string address = 5;
+    RoleType role = 6;
+    bool isSentByPrimary = 7;
+}
+
+message UserAddResponse {
+    bool status = 1;
+    string message = 2;
+}
+
+service UserAddService {
+    rpc addUser(UserAddRequest) returns (UserAddResponse);
+}
+
+message Item {
+    string itemId = 1;
+    string itemName = 2;
+    Type type = 3;
+    double price = 4;
+    int32 availableQuantity = 5;
+    int32 reservedQuantity = 6;
+    string sellerName = 7;
+}
+
+message ItemDTO {
+    string itemId = 1;
+    string itemName = 2;
+    Type type = 3;
+    double price = 4;
+    int32 availableQuantity = 5;
+    string sellerName = 6;
+}
+
+message ItemAddRequest {
+    string itemId = 1;
+    string itemName = 2;
+    Type type = 3;
+    double price = 4;
+    int32 availableQuantity = 5;
+    string sellerName = 6;
+    bool isSentByPrimary = 7;
+}
+
+message ItemAddResponse {
+    bool status = 1;
+    string message = 2;
+}
+
+service ItemAddService {
+    rpc addItem(ItemAddRequest) returns (ItemAddResponse);
+}
+
+message ItemUpdateRequest {
+    string itemId = 1;
+    string sellerName = 2;
+    double price = 3;
+    int32 availableQuantity = 4;
+    bool isSentByPrimary = 5;
+}
+
+message ItemUpdateResponse {
+    bool status = 1;
+    string message = 2;
+}
+
+service ItemUpdateService {
+    rpc updateItem(ItemUpdateRequest) returns (ItemUpdateResponse);
+}
+
+message ItemDeleteRequest {
+    string itemId = 1;
+    string sellerName = 2;
+    bool isSentByPrimary = 3;
+}
+
+message ItemDeleteResponse {
+    bool status = 1;
+    string message = 2;
+}
+
+service ItemDeleteService {
+    rpc deleteItem(ItemDeleteRequest) returns (ItemDeleteResponse);
+}
+
+message ItemSellerResponse {
+    repeated Item items = 1;
+    string message = 2;
+}
+
+message ItemGetAllResponse {
+    repeated ItemDTO items = 1;
+    string message = 2;
+}
+
+service ItemGetService {
+    rpc getSellerItems(UserRequest) returns (ItemSellerResponse);
+    rpc getAllItems(UserRequest) returns (ItemGetAllResponse);
+}
+
+
+message Reservation {
+    string reservationId = 1;
+    string itemId = 2;
+    string itemName = 3;
+    string buyerName = 4;
+    int32 quantity = 5;
+    string reservationDate = 6;
+    double paymentAmount = 7;
+    string sellerName = 8;
+}
+
+message ReservationSearchResponse {
+    repeated Reservation reservations = 1;
+}
+
+message ReserveRequest {
+    string reservationId = 1;
+    string itemId = 2;
+    string buyerName = 4;
+    int32 quantity = 5;
+    string reservationDate = 6;
+    bool isSentByPrimary = 7;
+}
+
+message ReserveResponse {
+    bool status = 1;
+    string message = 2;
+}
+
+service ReserveService {
+    rpc reserveItem(ReserveRequest) returns (ReserveResponse);
+}
+
+service ReservationGetService {
+    rpc getReservations(UserRequest) returns (ReservationSearchResponse);
+}
+
